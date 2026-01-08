@@ -49,14 +49,34 @@
             font-weight: normal;
             font-size: 16px;
             display: inline-block;
-            transition: opacity 0.2s, transform 0.2s;
+            transition: opacity 0.2s, transform 0.2s, background-color 0.2s;
             border: 1px solid white;
+            user-select: none;
         }
 
         .highlight:hover {
             opacity: 0.8;
             cursor: pointer;
             transform: scale(1.05);
+        }
+
+        /* PAUSE BUTTON STYLES (MATCHING INDEX) */
+        #pause-container {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1001; /* Higher than content wrapper */
+        }
+
+        .red-highlight {
+            background-color: #b30000; 
+            color: white;
+            border: none;
+        }
+        
+        .red-highlight:hover {
+            background-color: #ff0000; 
+            opacity: 1;
         }
 
         /* --- ABOUT CONTENT STYLES --- */
@@ -108,10 +128,7 @@
             width: 100%;
             height: auto;
             border: 2px solid black;
-            
-            /* --- ADD THIS LINE TO MOVE PICTURE DOWN --- */
             margin-top: 20px; 
-            
             margin-bottom: 10px;
             filter: grayscale(100%);
             transition: filter 0.3s;
@@ -131,6 +148,7 @@
         /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 600px) {
             #top-container { top: 20px; }
+            #pause-container { bottom: 10px; right: 10px; }
             
             .highlight { 
                 font-size: 11px; 
@@ -194,14 +212,21 @@
         </div>
     </div>
 
+    <div id="pause-container">
+        <div id="pause-btn" class="highlight red-highlight">Pause Animation</div>
+    </div>
+
     <script>
         // --- CONFIGURATION FOR SLOW ANIMATION ---
-        // Fewer particles than index, moving much slower
         const PARTICLE_COUNT = 30000; 
         
         let scene, camera, renderer, system;
         let positions;
         let time = 0;
+
+        // --- GLOBAL PAUSE LOGIC ---
+        // Check local storage to see if animation was paused on another page
+        let isPaused = localStorage.getItem('siteAnimationPaused') === 'true';
 
         init();
         animate();
@@ -249,10 +274,33 @@
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
             });
+
+             // --- PAUSE BUTTON SETUP ---
+             const pauseBtn = document.getElementById('pause-btn');
+            
+            // Set initial button text based on saved state
+            if(isPaused) {
+                pauseBtn.innerText = "Resume Animation";
+            }
+
+            pauseBtn.addEventListener('click', () => {
+                isPaused = !isPaused;
+                // Save the new state to localStorage
+                localStorage.setItem('siteAnimationPaused', isPaused);
+                
+                pauseBtn.innerText = isPaused ? "Resume Animation" : "Pause Animation";
+            });
         }
 
         function animate() {
             requestAnimationFrame(animate);
+
+            // IF PAUSED: Render one static frame and exit
+            if (isPaused) {
+                renderer.render(scene, camera);
+                return; 
+            }
+
             time += 0.002; // Slow time increment
 
             const posAttribute = system.geometry.attributes.position;
@@ -273,13 +321,9 @@
                 }
 
                 // Gentle sine wave movement on Y and Z based on X position and time
-                // This creates a "flowing flag" or "slow water" effect
                 const wave = Math.sin(posArray[ix] * 0.005 + time) * 2;
                 
-                // Add the wave to the Y position, but keep original structure roughly
                 posArray[iy] += Math.sin(time + posArray[ix]*0.01) * 0.5;
-                
-                // Gentle rotation influence
                 posArray[iz] += Math.cos(time * 0.5 + posArray[iy]*0.01) * 0.5;
             }
 
