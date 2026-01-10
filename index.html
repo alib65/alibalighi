@@ -1,406 +1,603 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8" />
     <meta name="description" content="Official portfolio of Ali Balighi. Explore original works in electronic music, contemporary music, and electroacoustic music. Featuring articles, scores, and research on animated notation and computer music.">
     <meta name="keywords" content="electronic music, contemporary music, electroacoustic music, computer music, articles, animated notation, Ali Balighi, composer, sound art">
     <meta name="author" content="Ali Balighi">
-    <title>Ali Balighi - Composer | Electronic, Electroacoustic & Contemporary Music</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        /* --- CORE STYLES --- */
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: #000000;
-            font-family: 'Courier New', Courier, monospace;
-        }
-        canvas { display: block; }
+  <title>Ali Balighi - Composer | Electronic, Electroacoustic & Contemporary Music</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #000000;
+      font-family: 'Courier New', Courier, monospace;
+    }
+    canvas { display: block; }
 
-        /* --- UI LAYOUT --- */
-        
-        #top-container {
-            position: absolute;
-            top: 30px;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            z-index: 100;
-            pointer-events: none; 
-        }
+    #top-container {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 100;
+      pointer-events: none;
+    }
 
-        #bottom-container {
-            position: absolute;
-            bottom: 100px;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            z-index: 100;
-            pointer-events: none;
-        }
+    #bottom-container {
+      position: absolute;
+      bottom: 100px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 100;
+      pointer-events: none;
+    }
 
-        /* PAUSE BUTTON CONTAINER */
-        #pause-container {
-            position: absolute;
-            bottom: 30px;
-            right: 30px;
-            z-index: 101; 
-        }
+    #pause-container {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      z-index: 101;
+    }
 
-        /* --- TYPOGRAPHY & ELEMENTS --- */
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 95%;
+      pointer-events: auto;
+    }
 
-        .menu {
-            display: flex;
-            flex-wrap: wrap; 
-            justify-content: center;
-            gap: 10px;
-            max-width: 95%; 
-            pointer-events: auto; 
-        }
+    .identity {
+      text-align: center;
+      pointer-events: auto;
+    }
 
-        .identity {
-            text-align: center;
-            pointer-events: auto;
-        }
+    .highlight {
+      background-color: white;
+      color: black;
+      padding: 5px 8px;
+      text-decoration: none;
+      font-weight: normal;
+      font-size: 16px;
+      display: inline-block;
+      transition: opacity 0.2s, transform 0.2s, background-color 0.2s;
+      cursor: pointer;
+      user-select: none;
+    }
 
-        .highlight {
-            background-color: white;
-            color: black;
-            padding: 5px 8px;
-            text-decoration: none;
-            font-weight: normal;
-            font-size: 16px;
-            display: inline-block;
-            transition: opacity 0.2s, transform 0.2s, background-color 0.2s;
-            cursor: pointer;
-            user-select: none; 
-        }
+    .highlight:hover {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
 
-        .highlight:hover {
-            opacity: 0.8;
-            transform: scale(1.05);
-        }
+    .red-highlight {
+      background-color: #b30000;
+      color: white;
+    }
 
-        /* Red Style Variant */
-        .red-highlight {
-            background-color: #b30000; 
-            color: white;
-        }
-        
-        .red-highlight:hover {
-            background-color: #ff0000; 
-            opacity: 1;
-        }
+    .red-highlight:hover {
+      background-color: #ff0000;
+      opacity: 1;
+    }
 
-        .name-text { font-size: 76.5px; }
-        .subtitle-text { font-size: 12px; margin-top: 4px; }
+    .name-text { font-size: 76.5px; }
+    .subtitle-text { font-size: 12px; margin-top: 4px; }
 
-        /* --- MOBILE RESPONSIVENESS --- */
-        @media (max-width: 600px) {
-            #top-container { top: 20px; }
-            #bottom-container { bottom: 30px; }
-            #pause-container { bottom: 10px; right: 10px; }
-            
-            .highlight { 
-                font-size: 11px; 
-                padding: 4px 6px;
-                margin-bottom: 2px;
-            }
-            
-            .menu { gap: 5px; }
-            .name-text { font-size: 20px; }
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    @media (max-width: 600px) {
+      #top-container { top: 20px; }
+      #bottom-container { bottom: 30px; }
+      #pause-container { bottom: 10px; right: 10px; }
+
+      .highlight {
+        font-size: 11px;
+        padding: 4px 6px;
+        margin-bottom: 2px;
+      }
+
+      .menu { gap: 5px; }
+      .name-text { font-size: 20px; }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-    <div id="top-container">
-        <nav class="menu">
-            <a href="index.html" class="highlight">HOME</a>
-            <a href="about.html" class="highlight">ABOUT</a>
-            <a href="music.html" class="highlight">MUSIC</a>
-            <a href="scores.html" class="highlight">SCORES</a>
-            <a href="articles.html" class="highlight">ARTICLES</a>
-            <a href="books.html" class="highlight">BOOKS</a>
-            <a href="https://github.com/alib65" target="_blank" class="highlight">CODE</a>
-            <a href="news.html" class="highlight">NEWS</a>
-            <a href="https://alibalighi.bandcamp.com/" target="_blank" class="highlight">BANDCAMP</a>
-            <a href="https://www.youtube.com/@AliBalighi" target="_blank" class="highlight">YOUTUBE</a>
-            <a href="contact.html" class="highlight">CONTACT</a>
-        </nav>
+  <div id="top-container">
+    <nav class="menu">
+      <a href="index.html" class="highlight">HOME</a>
+      <a href="about.html" class="highlight">ABOUT</a>
+      <a href="music.html" class="highlight">MUSIC</a>
+      <a href="scores.html" class="highlight">SCORES</a>
+      <a href="articles.html" class="highlight">ARTICLES</a>
+      <a href="books.html" class="highlight">BOOKS</a>
+      <a href="https://github.com/alib65" target="_blank" class="highlight">CODE</a>
+      <a href="news.html" class="highlight">NEWS</a>
+      <a href="https://alibalighi.bandcamp.com/" target="_blank" class="highlight">BANDCAMP</a>
+      <a href="https://www.youtube.com/@AliBalighi" target="_blank" class="highlight">YOUTUBE</a>
+      <a href="https://electronicnights.github.io" target="_blank" class="highlight">ELECTRONIC NIGHTS</a>
+      <a href="contact.html" class="highlight">CONTACT</a>
+    </nav>
+  </div>
+
+  <div id="bottom-container">
+    <div class="identity">
+      <div class="highlight name-text">ALI BALIGHI</div><br />
+      <div class="highlight subtitle-text">Composer | Scholar | Performer | Visual Artist | Creative Coder | Poet</div>
     </div>
+  </div>
 
-    <div id="bottom-container">
-        <div class="identity">
-            <div class="highlight name-text">ALI BALIGHI</div><br>
-            <div class="highlight subtitle-text">Composer | Scholar | Performer | Visual Artist | Creative Coder | Poet</div>
-        </div>
-    </div>
+  <div id="pause-container">
+    <div id="pause-btn" class="highlight red-highlight">Pause Animation</div>
+  </div>
 
-    <div id="pause-container">
-        <div id="pause-btn" class="highlight red-highlight">Pause Animation</div>
-    </div>
+  <script>
+    // --- CONFIGURATION ---
+    const PARTICLE_COUNT = 50000;
+    const SHAPE_TIME = 20000;
 
-    <script>
-        // --- CONFIGURATION ---
-        const PARTICLE_COUNT = 50000;
-        const SHAPE_TIME = 20000; 
-        
-        // Physics settings
-        const ATTRACTION = 0.03;  
-        const DAMPING = 0.96;     
-        const NOISE_SCALE = 0.8;  
-        
-        let scene, camera, renderer, system;
-        let positions, velocities, targets;
-        let currentShape = 0;
-        let shapeTimer = 0;
-        
-        // --- GLOBAL PAUSE LOGIC ---
-        // 1. Check if user previously paused the site
-        let isPaused = localStorage.getItem('siteAnimationPaused') === 'true';
-        
-        const shapes = [];
+    // Physics settings
+    const ATTRACTION = 0.03;
+    const DAMPING = 0.96;
+    const NOISE_SCALE = 0.8;
 
-        init();
-        animate();
+    let scene, camera, renderer, system;
+    let positions, velocities, targets;
 
-        function init() {
-            scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x000000, 0.001);
+    let currentShape = -1;
+    let shapeTimer = Date.now();
 
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 4000);
-            
-            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            document.body.appendChild(renderer.domElement);
+    // --- GLOBAL PAUSE LOGIC ---
+    let isPaused = localStorage.getItem('siteAnimationPaused') === 'true';
 
-            positions = new Float32Array(PARTICLE_COUNT * 3);
-            velocities = new Float32Array(PARTICLE_COUNT * 3);
-            targets = new Float32Array(PARTICLE_COUNT * 3);
+    const shapes = [];
 
-            for(let i=0; i<PARTICLE_COUNT * 3; i++) {
-                positions[i] = (Math.random() - 0.5) * 1000;
-                velocities[i] = (Math.random() - 0.5) * 2; 
-                targets[i] = positions[i];
-            }
+    init();
+    animate();
 
-            const geometry = new THREE.BufferGeometry();
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    function init() {
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x000000, 0.001);
 
-            const material = new THREE.PointsMaterial({
-                color: 0xffffff,
-                size: 0.8,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending,
-                sizeAttenuation: true
-            });
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 4000);
 
-            system = new THREE.Points(geometry, material);
-            scene.add(system);
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      document.body.appendChild(renderer.domElement);
 
-            createShapes();
-            changeShape();
+      positions = new Float32Array(PARTICLE_COUNT * 3);
+      velocities = new Float32Array(PARTICLE_COUNT * 3);
+      targets = new Float32Array(PARTICLE_COUNT * 3);
 
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
+      for (let i = 0; i < PARTICLE_COUNT * 3; i++) {
+        positions[i] = (Math.random() - 0.5) * 1000;
+        velocities[i] = (Math.random() - 0.5) * 2;
+        targets[i] = positions[i];
+      }
 
-            // --- PAUSE BUTTON SETUP ---
-            const pauseBtn = document.getElementById('pause-btn');
-            
-            // Set initial button text based on saved state
-            if(isPaused) {
-                pauseBtn.innerText = "Resume Animation";
-            }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-            pauseBtn.addEventListener('click', () => {
-                isPaused = !isPaused;
-                // Save the new state to localStorage so other pages know
-                localStorage.setItem('siteAnimationPaused', isPaused);
-                
-                pauseBtn.innerText = isPaused ? "Resume Animation" : "Pause Animation";
-            });
+      const material = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.8,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true
+      });
+
+      system = new THREE.Points(geometry, material);
+      scene.add(system);
+
+      createShapes();
+      changeShape();
+      shapeTimer = Date.now();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      const pauseBtn = document.getElementById('pause-btn');
+      if (isPaused) pauseBtn.innerText = "Resume Animation";
+
+      pauseBtn.addEventListener('click', () => {
+        isPaused = !isPaused;
+        localStorage.setItem('siteAnimationPaused', isPaused);
+        pauseBtn.innerText = isPaused ? "Resume Animation" : "Pause Animation";
+      });
+    }
+
+    function createShapes() {
+      const set = (arr, i, x, y, z) => {
+        arr[i * 3] = x;
+        arr[i * 3 + 1] = y;
+        arr[i * 3 + 2] = z;
+      };
+
+      const TAU = Math.PI * 2;
+      const Z_THICKNESS = 10;
+      const zJ = () => (Math.random() - 0.5) * Z_THICKNESS;
+
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const rot = (x, y, a) => {
+        const c = Math.cos(a), s = Math.sin(a);
+        return [x * c - y * s, x * s + y * c];
+      };
+      const pick = (arr) => arr[(Math.random() * arr.length) | 0];
+
+      shapes.length = 0;
+
+      // 01. Flower-of-life arc field (hex circle grid)
+      shapes.push((() => {
+        const spacing = 64;
+        const r0 = 22;
+        const h = spacing * Math.sqrt(3) / 2;
+        const centers = [];
+        const R = 320;
+
+        for (let j = -8; j <= 8; j++) {
+          for (let i = -8; i <= 8; i++) {
+            const cx = spacing * (i + j * 0.5);
+            const cy = h * j;
+            if (cx * cx + cy * cy <= R * R) centers.push([cx, cy]);
+          }
         }
 
-        function createShapes() {
-            const set = (arr, i, x, y, z) => {
-                arr[i*3] = x; arr[i*3+1] = y; arr[i*3+2] = z;
-            };
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const [cx, cy] = pick(centers);
+            const a = Math.random() * TAU;
+            const ring = Math.random() < 0.25 ? 2 : 1;
+            const rr = r0 * ring;
+            set(arr, i, cx + rr * Math.cos(a), cy + rr * Math.sin(a), zJ());
+          }
+          return arr;
+        };
+      })());
 
-            // 1. Exploded Star
-            shapes.push(() => {
-                const arr = new Float32Array(PARTICLE_COUNT * 3);
-                for(let i=0; i<PARTICLE_COUNT; i++){
-                    const t = i/PARTICLE_COUNT * Math.PI * 2;
-                    const r = 80 * (Math.abs(Math.cos(t*4)) + 0.2); 
-                    set(arr, i, r*Math.cos(t), r*Math.sin(t), (Math.random()-0.5)*100);
-                }
-                return arr;
-            });
-
-            // 2. The Vortex
-            shapes.push(() => {
-                const arr = new Float32Array(PARTICLE_COUNT * 3);
-                for(let i=0; i<PARTICLE_COUNT; i++){
-                    const t = i/PARTICLE_COUNT;
-                    const theta = t * Math.PI * 20;
-                    const r = t * 100;
-                    set(arr, i, r*Math.cos(theta), r*Math.sin(theta), Math.sin(r/10)*30);
-                }
-                return arr;
-            });
-
-            // 3. Muqarnas Cube 
-            shapes.push(() => {
-                const arr = new Float32Array(PARTICLE_COUNT * 3);
-                for(let i=0; i<PARTICLE_COUNT; i++){
-                    const side = Math.floor(Math.random()*6);
-                    let x,y,z;
-                    const s = 60;
-                    const u = (Math.random()-0.5)*2*s;
-                    const v = (Math.random()-0.5)*2*s;
-                    if(side===0){x=s;y=u;z=v;} else if(side===1){x=-s;y=u;z=v;}
-                    else if(side===2){x=u;y=s;z=v;} else if(side===3){x=u;y=-s;z=v;}
-                    else if(side===4){x=u;y=v;z=s;} else {x=u;y=v;z=-s;}
-                    
-                    if (Math.sqrt(u*u + v*v) < 20) { x*=1.5; y*=1.5; z*=1.5; } 
-                    set(arr, i, x, y, z);
-                }
-                return arr;
-            });
-
-            // 4. Double Rosette
-            shapes.push(() => {
-                const arr = new Float32Array(PARTICLE_COUNT * 3);
-                for(let i=0; i<PARTICLE_COUNT; i++){
-                    const t = (i/PARTICLE_COUNT)*Math.PI*2;
-                    const r1 = 60 * Math.cos(4*t);
-                    const r2 = 30 * Math.cos(8*t);
-                    const mix = (i%2===0)? r1 : r2;
-                    set(arr, i, mix*Math.cos(t), mix*Math.sin(t), (Math.random()-0.5)*40);
-                }
-                return arr;
-            });
-
-            // 5. Sphere Grid 
-            shapes.push(() => {
-                const arr = new Float32Array(PARTICLE_COUNT * 3);
-                const r = 90;
-                for(let i=0; i<PARTICLE_COUNT; i++){
-                    const phi = Math.acos( -1 + ( 2 * i ) / PARTICLE_COUNT );
-                    const theta = Math.sqrt( PARTICLE_COUNT * Math.PI ) * phi;
-                    const rNoisy = r + (Math.random() * 20);
-                    set(arr, i, rNoisy*Math.cos(theta)*Math.sin(phi), rNoisy*Math.sin(theta)*Math.sin(phi), rNoisy*Math.cos(phi));
-                }
-                return arr;
-            });
-            
-            // 6. Cross Chaos
-            shapes.push(() => {
-                const arr = new Float32Array(PARTICLE_COUNT * 3);
-                for(let i=0; i<PARTICLE_COUNT; i++){
-                    const branch = Math.floor(Math.random()*3);
-                    const d = (Math.random()-0.5)*200;
-                    const w = (Math.random()-0.5)*20;
-                    if(branch===0) set(arr, i, d, w, w);
-                    if(branch===1) set(arr, i, w, d, w);
-                    if(branch===2) set(arr, i, w, w, d);
-                }
-                return arr;
-            });
-
-             // 7. DNA Spiral 
-             shapes.push(() => {
-                const arr = new Float32Array(PARTICLE_COUNT * 3);
-                for(let i=0; i<PARTICLE_COUNT; i++){
-                    const t = i/PARTICLE_COUNT;
-                    const angle = t * Math.PI * 20;
-                    const y = (t*200) - 100;
-                    const r = 30 + 10*Math.sin(t*50);
-                    set(arr, i, r*Math.cos(angle), y, r*Math.sin(angle));
-                }
-                return arr;
-            });
+      // 02. Square lattice with rotated-square frames
+      shapes.push((() => {
+        const cell = 70;
+        const half = 10;
+        const side = 40;
+        const centers = [];
+        for (let y = -half; y <= half; y++) {
+          for (let x = -half; x <= half; x++) centers.push([x * cell, y * cell]);
         }
 
-        function changeShape() {
-            currentShape = (currentShape + 1) % shapes.length;
-            const newPos = shapes[currentShape]();
-            
-            for(let i=0; i<PARTICLE_COUNT*3; i++) {
-                targets[i] = newPos[i];
-                velocities[i] += (Math.random()-0.5) * 5; 
-                velocities[i+1] += (Math.random()-0.5) * 5;
-                velocities[i+2] += (Math.random()-0.5) * 5;
-            }
+        const edgePoint = (s, e) => {
+          const u = (Math.random() - 0.5) * s;
+          if (e === 0) return [ s / 2, u];
+          if (e === 1) return [ u,  s / 2];
+          if (e === 2) return [-s / 2, u];
+          return [u, -s / 2];
+        };
+
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const [cx, cy] = pick(centers);
+            const a = Math.random() < 0.5 ? 0 : Math.PI / 4;
+            const e = (Math.random() * 4) | 0;
+            const [lx, ly] = edgePoint(side, e);
+            const [rx, ry] = rot(lx, ly, a);
+            set(arr, i, cx + rx, cy + ry, zJ());
+          }
+          return arr;
+        };
+      })());
+
+      // 03. Triangular grid, edge-weave
+      shapes.push((() => {
+        const s = 62;
+        const h = s * Math.sqrt(3) / 2;
+        const half = 10;
+        const nodes = [];
+        for (let j = -half; j <= half; j++) {
+          for (let i = -half; i <= half; i++) nodes.push([i * s + (j & 1 ? s / 2 : 0), j * h]);
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
+        const tri = (up) => {
+          const a = [0, 0];
+          const b = [s, 0];
+          const c = [s / 2, up ? h : -h];
+          return [a, b, c];
+        };
 
-            // IF PAUSED: Render one static frame and exit
-            if (isPaused) {
-                renderer.render(scene, camera);
-                shapeTimer += 16; 
-                return; 
-            }
+        const TUP = tri(true);
+        const TDN = tri(false);
 
-            const time = Date.now() * 0.001;
-            
-            for(let i=0; i<PARTICLE_COUNT*3; i+=3) {
-                const ix = i, iy = i+1, iz = i+2;
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const [ox, oy] = pick(nodes);
+            const verts = Math.random() < 0.5 ? TUP : TDN;
+            const e = (Math.random() * 3) | 0;
+            const p0 = verts[e];
+            const p1 = verts[(e + 1) % 3];
+            const t = Math.random();
+            set(arr, i, ox + lerp(p0[0], p1[0], t), oy + lerp(p0[1], p1[1], t), zJ());
+          }
+          return arr;
+        };
+      })());
 
-                const ax = (targets[ix] - positions[ix]) * ATTRACTION;
-                const ay = (targets[iy] - positions[iy]) * ATTRACTION;
-                const az = (targets[iz] - positions[iz]) * ATTRACTION;
-
-                const swirlX = Math.sin(positions[iy] * 0.01 + time) * NOISE_SCALE;
-                const swirlY = Math.cos(positions[iz] * 0.01 + time) * NOISE_SCALE;
-                const swirlZ = Math.sin(positions[ix] * 0.01 + time) * NOISE_SCALE;
-
-                velocities[ix] += ax + swirlX;
-                velocities[iy] += ay + swirlY;
-                velocities[iz] += az + swirlZ;
-
-                velocities[ix] *= DAMPING;
-                velocities[iy] *= DAMPING;
-                velocities[iz] *= DAMPING;
-
-                positions[ix] += velocities[ix];
-                positions[iy] += velocities[iy];
-                positions[iz] += velocities[iz];
-            }
-
-            system.geometry.attributes.position.needsUpdate = true;
-
-            const camSpeed = 0.5;
-            const radius = 180;
-            camera.position.x = radius * Math.sin(time * camSpeed);
-            camera.position.y = radius * Math.sin(time * camSpeed * 0.6);
-            camera.position.z = radius * Math.cos(time * camSpeed * 0.8);
-            
-            camera.position.x += (Math.random()-0.5) * 2;
-            camera.position.y += (Math.random()-0.5) * 2;
-            camera.position.z += (Math.random()-0.5) * 2;
-            
-            camera.lookAt(0, 0, 0);
-            system.rotation.z = time * 0.1;
-
-            if(Date.now() - shapeTimer > SHAPE_TIME) {
-                shapeTimer = Date.now();
-                changeShape();
-            }
-
-            renderer.render(scene, camera);
+      // 04. Honeycomb (hexagon edge lattice)
+      shapes.push((() => {
+        const spacing = 74;
+        const h = spacing * Math.sqrt(3) / 2;
+        const half = 8;
+        const centers = [];
+        for (let j = -half; j <= half; j++) {
+          for (let i = -half; i <= half; i++) centers.push([spacing * (i + j * 0.5), h * j]);
         }
-    </script>
+
+        const R = 26;
+        const hex = [];
+        for (let k = 0; k < 6; k++) {
+          const a = (k / 6) * TAU;
+          hex.push([R * Math.cos(a), R * Math.sin(a)]);
+        }
+
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const [cx, cy] = pick(centers);
+            const e = (Math.random() * 6) | 0;
+            const p0 = hex[e];
+            const p1 = hex[(e + 1) % 6];
+            const t = Math.random();
+            set(arr, i, cx + lerp(p0[0], p1[0], t), cy + lerp(p0[1], p1[1], t), zJ());
+          }
+          return arr;
+        };
+      })());
+
+      // 05. Octagon frames on a square grid
+      shapes.push((() => {
+        const cell = 92;
+        const half = 8;
+        const centers = [];
+        for (let y = -half; y <= half; y++) {
+          for (let x = -half; x <= half; x++) centers.push([x * cell, y * cell]);
+        }
+
+        const R = 30;
+        const oct = [];
+        for (let k = 0; k < 8; k++) {
+          const a = (k / 8) * TAU + Math.PI / 8;
+          oct.push([R * Math.cos(a), R * Math.sin(a)]);
+        }
+
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const [cx, cy] = pick(centers);
+            const e = (Math.random() * 8) | 0;
+            const p0 = oct[e];
+            const p1 = oct[(e + 1) % 8];
+            const t = Math.random();
+            set(arr, i, cx + lerp(p0[0], p1[0], t), cy + lerp(p0[1], p1[1], t), zJ());
+          }
+          return arr;
+        };
+      })());
+
+      // 06. Eight-point star outline (tiled)
+      shapes.push((() => {
+        const cell = 92;
+        const half = 8;
+        const centers = [];
+        for (let y = -half; y <= half; y++) {
+          for (let x = -half; x <= half; x++) centers.push([x * cell, y * cell]);
+        }
+
+        const R = 34, r = 16;
+        const star = [];
+        for (let k = 0; k < 16; k++) {
+          const a = (k / 16) * TAU;
+          const rr = (k & 1) === 0 ? R : r;
+          star.push([rr * Math.cos(a), rr * Math.sin(a)]);
+        }
+
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const [cx, cy] = pick(centers);
+            const e = (Math.random() * 16) | 0;
+            const p0 = star[e];
+            const p1 = star[(e + 1) % 16];
+            const t = Math.random();
+            set(arr, i, cx + lerp(p0[0], p1[0], t), cy + lerp(p0[1], p1[1], t), zJ());
+          }
+          return arr;
+        };
+      })());
+
+      // 07. Dodecagonal rosette field
+      shapes.push((() => {
+        const cell = 110;
+        const half = 7;
+        const centers = [];
+        for (let y = -half; y <= half; y++) {
+          for (let x = -half; x <= half; x++) centers.push([x * cell, y * cell]);
+        }
+
+        const R = 46;
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const [cx, cy] = pick(centers);
+            const a = Math.random() * TAU;
+            const rr = R * (0.55 + 0.45 * Math.abs(Math.cos(6 * a)));
+            set(arr, i, cx + rr * Math.cos(a), cy + rr * Math.sin(a), zJ());
+          }
+          return arr;
+        };
+      })());
+
+      // 08. Interlaced strapwork lattice
+      shapes.push((() => {
+        const S = 720;
+        const A = 22;
+        const F = 0.045;
+
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const u = (Math.random() - 0.5) * S;
+            const v = (Math.random() - 0.5) * S;
+            const x = u + A * Math.sin(v * F);
+            const y = v + A * Math.sin(u * F);
+            set(arr, i, x, y, zJ());
+          }
+          return arr;
+        };
+      })());
+
+      // 09. Rhombille-style diamonds on a 60° lattice
+      shapes.push((() => {
+        const cell = 78;
+        const half = 8;
+        const e1 = [cell, 0];
+        const e2 = [cell / 2, cell * Math.sqrt(3) / 2];
+
+        const centers = [];
+        for (let j = -half; j <= half; j++) {
+          for (let i = -half; i <= half; i++) centers.push([i * e1[0] + j * e2[0], i * e1[1] + j * e2[1]]);
+        }
+
+        const w = 46;
+        const h = w * Math.sqrt(3) / 2;
+        const diamond = [
+          [0, -h],
+          [w, 0],
+          [0, h],
+          [-w, 0]
+        ];
+
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const [cx, cy] = pick(centers);
+            const ang = ((Math.random() * 3) | 0) * (Math.PI / 3);
+            const e = (Math.random() * 4) | 0;
+            const p0 = diamond[e];
+            const p1 = diamond[(e + 1) % 4];
+            const t = Math.random();
+            const lx = lerp(p0[0], p1[0], t);
+            const ly = lerp(p0[1], p1[1], t);
+            const [rx, ry] = rot(lx, ly, ang);
+            set(arr, i, cx + rx, cy + ry, zJ());
+          }
+          return arr;
+        };
+      })());
+
+      // 10. Tenfold star field (non-tessellated clustered rosettes)
+      shapes.push((() => {
+        const centers = [];
+        for (let i = 0; i < 90; i++) {
+          const a = Math.random() * TAU;
+          const r = 80 + Math.random() * 260;
+          centers.push([r * Math.cos(a), r * Math.sin(a)]);
+        }
+
+        const R = 62;
+        return () => {
+          const arr = new Float32Array(PARTICLE_COUNT * 3);
+          for (let i = 0; i < PARTICLE_COUNT; i++) {
+            const [cx, cy] = pick(centers);
+            const a = Math.random() * TAU;
+            const rr = R * (0.35 + 0.65 * Math.abs(Math.cos(5 * a)));
+            const m = 0.75 + Math.random() * 0.35;
+            set(arr, i, cx + m * rr * Math.cos(a), cy + m * rr * Math.sin(a), zJ());
+          }
+          return arr;
+        };
+      })());
+    }
+
+    function changeShape() {
+      currentShape = (currentShape + 1) % shapes.length;
+      const newPos = shapes[currentShape]();
+
+      for (let i = 0; i < PARTICLE_COUNT * 3; i++) targets[i] = newPos[i];
+
+      for (let i = 0; i < PARTICLE_COUNT * 3; i += 3) {
+        velocities[i]     += (Math.random() - 0.5) * 5;
+        velocities[i + 1] += (Math.random() - 0.5) * 5;
+        velocities[i + 2] += (Math.random() - 0.5) * 5;
+      }
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (isPaused) {
+        renderer.render(scene, camera);
+        return;
+      }
+
+      const time = Date.now() * 0.001;
+
+      for (let i = 0; i < PARTICLE_COUNT * 3; i += 3) {
+        const ix = i, iy = i + 1, iz = i + 2;
+
+        const ax = (targets[ix] - positions[ix]) * ATTRACTION;
+        const ay = (targets[iy] - positions[iy]) * ATTRACTION;
+        const az = (targets[iz] - positions[iz]) * ATTRACTION;
+
+        const swirlX = Math.sin(positions[iy] * 0.01 + time) * NOISE_SCALE;
+        const swirlY = Math.cos(positions[iz] * 0.01 + time) * NOISE_SCALE;
+        const swirlZ = Math.sin(positions[ix] * 0.01 + time) * NOISE_SCALE;
+
+        velocities[ix] += ax + swirlX;
+        velocities[iy] += ay + swirlY;
+        velocities[iz] += az + swirlZ;
+
+        velocities[ix] *= DAMPING;
+        velocities[iy] *= DAMPING;
+        velocities[iz] *= DAMPING;
+
+        positions[ix] += velocities[ix];
+        positions[iy] += velocities[iy];
+        positions[iz] += velocities[iz];
+      }
+
+      system.geometry.attributes.position.needsUpdate = true;
+
+      const camSpeed = 0.5;
+      const radius = 180;
+      camera.position.x = radius * Math.sin(time * camSpeed);
+      camera.position.y = radius * Math.sin(time * camSpeed * 0.6);
+      camera.position.z = radius * Math.cos(time * camSpeed * 0.8);
+
+      camera.position.x += (Math.random() - 0.5) * 2;
+      camera.position.y += (Math.random() - 0.5) * 2;
+      camera.position.z += (Math.random() - 0.5) * 2;
+
+      camera.lookAt(0, 0, 0);
+      system.rotation.z = time * 0.1;
+
+      if (Date.now() - shapeTimer > SHAPE_TIME) {
+        shapeTimer = Date.now();
+        changeShape();
+      }
+
+      renderer.render(scene, camera);
+    }
+  </script>
 </body>
 </html>
